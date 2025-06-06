@@ -2,8 +2,8 @@ package controllers
 
 import (
 	"context"
-	"ecommerceLibrary/database"
-	"ecommerceLibrary/models"
+	"github.com/anthqny/eComerce/database"
+	"github.com/anthqny/eComerce/models"
 	"fmt"
 	"log"
 	"net/http"
@@ -14,7 +14,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 
-	"golang.org/x/crypto/bycrypt" // same
+	"golang.org/x/crypto/bcrypt" // same
 )
 var UserCollection = *mongo.Collection = database.UserData(database.Client, "Users")
 var ProductCollection = *mongo.Collection = database.ProductData(database.Client, "Products")
@@ -154,4 +154,39 @@ func SearchProduct() gin.HandlerFunc {
 		c.IndentedJSON(200, productList)
 		}
 	}
-func SearchProductByQuery() gin.Handler
+func SearchProductByQuery() gin.Handler{
+	return func(c *gin.Context){
+		var searchProducts []models.Product
+		queryParam := c.Query("name")
+
+		if queryParam ==""{
+			logn.Println("query is empty")
+			c.Header("Content-Type", "application/json")
+			c.JSON(HTTP.StatusNotFound, gin.H{"Error": "Invalid search index"})
+			c.Abort()
+			return
+		}
+		var ctx, cancel= context.WithTimeout(context.Background(), 100*time.Second)
+		defer cancel()
+		searchquerydb, err := ProductCollection.Find(ctx, bson.M{"product_name", bson.M{"$regex": queryParam}})
+
+		if err != nil{
+			c.IndentedJSON(404, "something went wrong fetching the data")
+			return
+		}
+		err = searchquerydb.All(ctx, &searchProducts)
+		if err != nil{
+			log.Println(err)
+			c.IndentedJSON(404, "invalid")
+			return
+		}
+		defer searchquerydb.Close(ctx)
+		if err := searcgquerydb.Err(); err != nil{
+			log.Println(err)
+			c.IndentedJSON(404, "invaid request")
+			return
+		}
+		defer cancel()
+		c.IndentedJSON(200, searchproducts)
+	}
+}
