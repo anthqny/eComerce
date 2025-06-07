@@ -119,7 +119,7 @@ func Login() gin.HandlerFunc {
 		defer cancel()
 		if !PasswordIsValid {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": msg})
-			fmt.Printf(msg)
+			fmt.Println(msg)
 			return
 		}
 		//token vid 7 14:32

@@ -7,19 +7,21 @@ import (
 )
 
 type User struct {
-	ID              primitive.ObjectID `json:"id" bson: "_id"`
-	First_Name      *string            `json:"first_name" validate:"required, min=2,max=30"`
-	Last_Name       *string            `json:"last_name" validate:"required, min=2,max=30"`
-	Password        *string            `json:"password" validate:"required, min=6"`
-	Email           *string            `json:"email" validate:"email, required"`
+	ID              primitive.ObjectID `json:"id" bson:"_id"`
+	First_Name      *string            `json:"first_name" validate:"required,min=2,max=30"`
+	Last_Name       *string            `json:"last_name" validate:"required,min=2,max=30"`
+	Password        *string            `json:"password" validate:"required,min=6"`
+	Email           *string            `json:"email" validate:"required,email"`
 	Phone           *string            `json:"phone" validate:"required"`
-	Created_At      time.Time          `json:"created_at"`
-	Updated_At      time.Time          `json:"updated_at"`
-	User_ID         string             `json:"user_id"`
-	UserCart        []ProductUser      `json:"usercart" bson: "usercart"`
-	Address_Details []Address          `json:"address" bson: "address"`
-	Order_Status    []Order            `json:"orders" bson: "orders"`
-} //no estoy poniendo los tokens en user vid 3-4 creo
+	Created_At      time.Time          `json:"created_at" bson:"created_at"`
+	Updated_At      time.Time          `json:"updated_at" bson:"updated_at"`
+	User_ID         string             `json:"user_id" bson:"user_id"`
+	UserCart        []ProductUser      `json:"usercart" bson:"usercart"`
+	Address_Details []Address          `json:"address" bson:"address"`
+	Order_Status    []Order            `json:"orders" bson:"orders"`
+}
+
+//no estoy poniendo los tokens en user vid 3-4 creo
 
 type Product struct {
 	Product_ID   primitive.ObjectID `bson:"_id"`
