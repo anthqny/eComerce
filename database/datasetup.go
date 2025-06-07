@@ -11,8 +11,8 @@ import (
 )
 
 func DBset() *mongo.Client {
-	client, err := morgo.NewClient(options.Client().ApplyURL("mongodb://localhost:27017"))
-	if err != nill {
+	client, err := mongo.NewClient(options.Client().ApplyURI("mongodb://localhost:27017"))
+	if err != nil {
 		log.Fatal(err)
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
@@ -31,7 +31,7 @@ func DBset() *mongo.Client {
 	return client
 }
 
-var Client *mongo.Client = DBSet()
+var Client *mongo.Client = DBset()
 
 func UserData(client *mongo.Client, collectionName string) *mongo.Collection {
 	var collection *mongo.Collection = client.Database("Ecomerce").Collection(collectionName)

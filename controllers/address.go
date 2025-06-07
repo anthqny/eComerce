@@ -17,12 +17,12 @@ func AddAddress() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		user_id := c.Query("id")
 		if user_id == "" {
-			c.Header{"Context-Type", "application/json"}
+			c.Header("Context-Type", "application/json")
 			c.JSON(http.StatusNotFound, gin.H{"error": "Invalid code"})
 			c.Abort()
 			return
 		}
-		address, err := ObjectIDFromHex(user_id)
+		address, err := primitive.ObjectIDFromHex(user_id)
 		if err != nil {
 			c.IndentedJSON(500, "Internal Server Error")
 		}
@@ -45,7 +45,7 @@ func AddAddress() gin.HandlerFunc {
 		}
 		var size int32
 		for _, address_no := range addressinfo {
-			count := address_no{"count"}
+			count := address_no["count"]
 			size = count.(int32)
 		}
 		if size < 2 {
@@ -147,7 +147,7 @@ func DeleteAddress() gin.HandlerFunc {
 		defer cancel()
 		filter := bson.D{primitive.E{Key: "_id", Value: usert_id}}
 		update := bson.D{{Key: "$set", Value: bson.D{primitive.E{Key: "address", Value: addresses}}}}
-		_, err = UserCollection.Update(ctx, filter, update)
+		_, err = UserCollection.UpdateOne(ctx, filter, update)
 		if err != nil {
 			c.IndentedJSON(404, "Wrong command")
 			return
